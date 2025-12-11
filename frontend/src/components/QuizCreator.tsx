@@ -50,7 +50,7 @@ const QuizCreator = ({ onBack, onQuizGenerated }: QuizCreatorProps) => {
       Make sure the questions are educational, varied in difficulty, and cover different aspects of the topic. The correctAnswer should be the index (0-3) of the correct option.`;
 
       // Gemini API endpoint for text generation
-      const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent";
+      const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
 
       const response = await fetch(`${geminiEndpoint}?key=${apiKey}`, {
         method: "POST",
