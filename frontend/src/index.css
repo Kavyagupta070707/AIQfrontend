@@ -266,6 +266,110 @@ All colors MUST be HSL.
     backdrop-filter: var(--theme-world-blur);
   }
 
+  .theme-atmosphere {
+    opacity: 0.9;
+  }
+
+  .theme-leaf {
+    position: absolute;
+    left: -8vw;
+    display: block;
+    border-radius: 100% 0 100% 0;
+    background:
+      radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.42), transparent 28%),
+      linear-gradient(135deg, rgba(58, 145, 80, 0.72), rgba(201, 171, 78, 0.74));
+    box-shadow: 0 5px 14px rgba(38, 88, 53, 0.16);
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(16deg);
+    animation-name: theme-leaf-drift;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .theme-leaf::after {
+    content: "";
+    position: absolute;
+    left: 48%;
+    top: 8%;
+    width: 1px;
+    height: 84%;
+    background: rgba(37, 84, 49, 0.22);
+    transform: rotate(12deg);
+  }
+
+  .theme-shooting-star {
+    position: absolute;
+    left: -16vw;
+    display: block;
+    width: 120px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(191, 247, 255, 0.18), rgba(255, 255, 255, 0.92));
+    filter: drop-shadow(0 0 8px rgba(125, 211, 252, 0.72));
+    opacity: 0;
+    transform: rotate(12deg);
+    animation-name: theme-star-shoot;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  .theme-shooting-star::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: #ffffff;
+    transform: translateY(-50%);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+  }
+
+  @keyframes theme-leaf-drift {
+    0% {
+      opacity: 0;
+      transform: translate3d(-8vw, -8px, 0) rotate(0deg);
+    }
+    12% {
+      opacity: 0.34;
+    }
+    42% {
+      transform: translate3d(43vw, 38px, 0) rotate(150deg);
+    }
+    76% {
+      opacity: 0.28;
+      transform: translate3d(82vw, 82px, 0) rotate(285deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(112vw, 132px, 0) rotate(390deg);
+    }
+  }
+
+  @keyframes theme-star-shoot {
+    0%,
+    72% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0) rotate(12deg);
+    }
+    77% {
+      opacity: 0.95;
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(124vw, 120px, 0) rotate(12deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-leaf,
+    .theme-shooting-star {
+      display: none;
+      animation: none;
+    }
+  }
+
   :root[data-theme="light"] .theme-dashboard-hero-image {
     display: block;
     opacity: 1;

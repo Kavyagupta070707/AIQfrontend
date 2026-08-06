@@ -22,6 +22,7 @@ import SignupPage from "../pages/SignupPage";
 import mountainNight from "@/assets/theme-mountain-night.png";
 import mountainMorning from "@/assets/theme-mountain-morning-light.png";
 import { useStudyTheme } from "@/components/study/ThemeProvider";
+import ThemeAtmosphere from "@/components/study/ThemeAtmosphere";
 
 const productFeatures = [
   {
@@ -68,6 +69,7 @@ const HeroSection = ({
     <main className="relative min-h-screen overflow-hidden bg-[var(--theme-page)] text-[var(--theme-text)]">
       <img src={heroBackground} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[var(--theme-world-opacity)]" />
       <div className="theme-world-veil absolute inset-0 bg-[var(--theme-world-overlay)]" />
+      <ThemeAtmosphere />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
