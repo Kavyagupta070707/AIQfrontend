@@ -116,40 +116,40 @@ const LeaderboardPage = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-none shadow-lg bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+            <Card className="aiq-card border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-cyan-100 text-sm font-medium">Total Participants</p>
-                    <p className="text-3xl font-bold mt-2">{allResults.length}</p>
+                    <p className="aiq-muted text-sm font-medium">Total Participants</p>
+                    <p className="aiq-heading text-3xl font-bold mt-2">{allResults.length}</p>
                   </div>
-                  <Users className="w-12 h-12 text-cyan-200 opacity-80" />
+                  <Users className="w-12 h-12 text-teal-300 opacity-80" />
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="border-none shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+            <Card className="aiq-card border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-100 text-sm font-medium">Average Score</p>
-                    <p className="text-3xl font-bold mt-2">{avgScore}%</p>
+                    <p className="aiq-muted text-sm font-medium">Average Score</p>
+                    <p className="aiq-heading text-3xl font-bold mt-2">{avgScore}%</p>
                   </div>
-                  <Target className="w-12 h-12 text-blue-200 opacity-80" />
+                  <Target className="w-12 h-12 text-blue-300 opacity-80" />
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="border-none shadow-lg bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+            <Card className="aiq-card border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-indigo-100 text-sm font-medium">High Score</p>
-                    <p className="text-3xl font-bold mt-2">
+                    <p className="aiq-muted text-sm font-medium">High Score</p>
+                    <p className="aiq-heading text-3xl font-bold mt-2">
                       {allResults.length > 0 ? Math.max(...allResults.map(r => r.score)) : 0}/{quiz.questions?.length || 0}
                     </p>
                   </div>
-                  <Trophy className="w-12 h-12 text-indigo-200 opacity-80" />
+                  <Trophy className="w-12 h-12 text-violet-300 opacity-80" />
                 </div>
               </CardContent>
             </Card>

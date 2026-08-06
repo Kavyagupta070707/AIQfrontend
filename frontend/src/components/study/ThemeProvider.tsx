@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-type StudyTheme = "dark";
+type StudyTheme = "dark" | "light";
 
 type ThemeContextValue = {
   theme: StudyTheme;
@@ -10,7 +10,10 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export const ThemeProvider = ({ children }) => {
-  const theme: StudyTheme = "dark";
+  const [theme, setTheme] = useState<StudyTheme>(() => {
+    const savedTheme = localStorage.getItem("aiq-theme");
+    return savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+  });
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -20,7 +23,7 @@ export const ThemeProvider = ({ children }) => {
   const value = useMemo(
     () => ({
       theme,
-      toggleTheme: () => {},
+      toggleTheme: () => setTheme((current) => (current === "dark" ? "light" : "dark")),
     }),
     [theme]
   );

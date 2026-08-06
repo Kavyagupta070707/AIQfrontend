@@ -7,10 +7,12 @@ import {
   ClipboardList,
   FileText,
   Layers3,
+  Moon,
   NotebookPen,
   Plus,
   Sparkles,
   StickyNote,
+  Sun,
   Trophy,
   X,
 } from "lucide-react";
@@ -18,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 import mountainNight from "@/assets/theme-mountain-night.png";
+import mountainMorning from "@/assets/theme-mountain-morning-light.png";
+import { useStudyTheme } from "@/components/study/ThemeProvider";
 
 const productFeatures = [
   {
@@ -57,14 +61,16 @@ const HeroSection = ({
   onLoginSuccess: (token: string, userObj: any) => void;
 }) => {
   const [showAuth, setShowAuth] = useState<"login" | "signup" | null>(null);
+  const { theme, toggleTheme } = useStudyTheme();
+  const heroBackground = theme === "light" ? mountainMorning : mountainNight;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--theme-page)] text-[var(--theme-text)]">
-      <img src={mountainNight} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[var(--theme-world-opacity)]" />
+      <img src={heroBackground} alt="" className="absolute inset-0 h-full w-full object-cover opacity-[var(--theme-world-opacity)]" />
       <div className="theme-world-veil absolute inset-0 bg-[var(--theme-world-overlay)]" />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between gap-4">
+        <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--theme-accent)] text-white shadow-lg shadow-black/15">
               <BookOpen className="h-6 w-6" />
@@ -75,11 +81,22 @@ const HeroSection = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" onClick={() => setShowAuth("login")} className="aiq-button-soft h-10">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="aiq-button-soft h-10 w-10 rounded-md"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setShowAuth("login")} className="aiq-button-soft h-10 flex-1 sm:flex-none">
               Log in
             </Button>
-            <Button type="button" onClick={() => setShowAuth("signup")} className="aiq-button-primary h-10">
+            <Button type="button" onClick={() => setShowAuth("signup")} className="aiq-button-primary h-10 flex-1 sm:flex-none">
               Sign up
             </Button>
           </div>
@@ -87,10 +104,7 @@ const HeroSection = ({
 
         <section className="grid flex-1 items-center gap-10 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
           <div>
-            <div className="aiq-chip inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold">
-              <Sparkles className="mr-2 h-4 w-4" />
-              Roadmaps, notes, reminders, and quizzes in one flow
-            </div>
+            
 
             <h1 className="mt-7 max-w-4xl text-5xl font-bold leading-tight tracking-normal sm:text-6xl lg:text-7xl">
               Enter a calmer world for serious study.
@@ -180,14 +194,14 @@ const HeroSection = ({
       </div>
 
       {showAuth && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[color-mix(in_srgb,var(--theme-page)_72%,rgba(2,6,23,0.72))] px-4 py-6 backdrop-blur-md">
           <div className="relative w-full max-w-md">
             <Button
               type="button"
               variant="ghost"
               size="icon"
               onClick={() => setShowAuth(null)}
-              className="absolute -right-2 -top-12 h-10 w-10 rounded-full text-slate-200 hover:bg-white/10 hover:text-white"
+              className="absolute -right-2 -top-12 h-10 w-10 rounded-full text-[var(--theme-text)] hover:bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)]"
               aria-label="Close sign in dialog"
             >
               <X className="h-5 w-5" />

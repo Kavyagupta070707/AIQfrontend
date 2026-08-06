@@ -52,4 +52,5 @@ export const studyApi = {
   deleteStickyNote: (id: string) => api.delete(`/api/sticky-notes/${id}`),
   generateQuiz: (topic: string) => api.post("/api/ai/quiz", { topic }),
   saveQuiz: (payload: any) => api.post("/api/quiz", payload),
+  getResults: (userId: string) => api.get(`/api/results?userId=${userId}`),
 };

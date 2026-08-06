@@ -44,6 +44,7 @@ import Leaderboard from "@/components/Leaderboard";
 import NotFound from "./pages/NotFound";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ResultsPage from "./pages/ResultsPage";
+import AttendedQuizzesPage from "./pages/AttendedQuizzesPage";
 import StudyShell from "@/components/study/StudyShell";
 import { ThemeProvider } from "@/components/study/ThemeProvider";
 
@@ -115,6 +116,7 @@ const App = () => {
               <Route path="/short-notes" element={withShell(<ShortNotesPage user={user} />)} />
               <Route path="/sticky-notes" element={withShell(<StickyNotesPage user={user} />)} />
               <Route path="/create" element={withShell(<QuizCreator onBack={() => window.location.href='/dashboard'} onQuizGenerated={setCurrentQuiz} />)} />
+              <Route path="/attended-quizzes" element={withShell(<AttendedQuizzesPage user={user} />)} />
               <Route path="/quiz" element={withShell(currentQuiz ? <QuizDisplay quiz={currentQuiz} onBack={() => window.location.href='/dashboard'} /> : <Navigate to="/dashboard" />)} />
               <Route path="/take" element={withShell(currentQuiz ? <QuizTaker quiz={currentQuiz} onBack={() => window.location.href='/quiz'} onComplete={setQuizResults} /> : <Navigate to="/dashboard" />)} />
               <Route path="/quiz/:id/take" element={withShell(<QuizTakerWrapper onComplete={setQuizResults} />)} />

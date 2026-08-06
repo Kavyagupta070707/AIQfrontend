@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, Users, LogIn, UserPlus } from "lucide-react";
+import { ArrowLeft, Users } from "lucide-react";
 import { toast } from "sonner";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
@@ -25,7 +25,6 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
   const [hasStarted, setHasStarted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuth, setShowAuth] = useState<"login" | "signup" | null>(null);
-  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in
@@ -240,19 +239,19 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
 
   if (!hasStarted) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-[var(--theme-text)]">
-        <div className="w-full max-w-3xl px-4 flex flex-col items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center px-3 py-6 text-[var(--theme-text)] sm:px-4">
+        <div className="flex w-full max-w-3xl flex-col items-center justify-center">
           <Button 
             variant="ghost" 
             onClick={onBack}
-            className="aiq-muted mb-8 self-start hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
+            className="aiq-muted mb-4 self-start hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)] sm:mb-8"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
           <Card className="aiq-card w-full">
             <CardHeader className="text-center">
-              <CardTitle className="aiq-heading text-3xl font-bold">
+              <CardTitle className="aiq-heading text-2xl font-bold leading-tight sm:text-3xl">
                 Quiz: {quiz.topic}
               </CardTitle>
               <p className="aiq-muted">
@@ -303,8 +302,19 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
   const question = quiz.questions[currentQuestion];
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center text-[var(--theme-text)]">
-      <div className="w-full max-w-5xl px-4 flex flex-row items-center justify-center py-8 gap-8">
+    <div className="flex min-h-screen w-full items-start justify-center px-3 py-5 text-[var(--theme-text)] sm:px-4 md:items-center md:py-8">
+      <div className="flex w-full max-w-5xl flex-col items-stretch justify-center gap-4 md:flex-row md:items-center md:gap-8">
+        <div className="aiq-card rounded-lg border p-4 md:hidden">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-[var(--theme-accent)]">{playerName}</p>
+              <p className="aiq-muted text-xs">Question {currentQuestion + 1} of {quiz.questions.length}</p>
+            </div>
+            <span className="aiq-chip rounded-md border px-2.5 py-1 text-xs font-semibold">{Math.round(progress)}%</span>
+          </div>
+          <Progress value={progress} className="h-2 bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)]" />
+        </div>
+
         {/* Circular Progress Section */}
         <div className="hidden md:flex flex-col items-center justify-center w-1/4 max-w-[140px] h-full">
           <div className="mb-4 max-w-[120px] truncate text-center text-base font-semibold text-[var(--theme-accent)]">
@@ -328,47 +338,47 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
           </div>
         </div>
         {/* Quiz Card Section */}
-        <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="flex min-w-0 flex-1 flex-col items-center justify-center">
           <Card className="aiq-card w-full">
-            <CardHeader>
-              <CardTitle className="aiq-heading text-2xl font-bold">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="aiq-heading text-xl font-bold leading-7 sm:text-2xl sm:leading-8">
                 {question.question}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
               {/* Answer Options */}
               <div className="space-y-3">
                 {question.options.map((option: string, index: number) => (
                   <Button
                     key={index}
                     variant={selectedAnswer === index ? "default" : "outline"}
-                    className={`w-full justify-start p-6 h-auto text-left ${
+                    className={`min-h-[64px] w-full justify-start whitespace-normal px-3 py-4 text-left sm:px-6 sm:py-5 ${
                       selectedAnswer === index 
                         ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-900 border-cyan-400 font-semibold' 
                         : 'aiq-subcard hover:bg-[var(--theme-card-hover)]'
                     }`}
                     onClick={() => selectAnswer(index)}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    <div className="flex min-w-0 items-start gap-3">
+                      <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-medium ${
                         selectedAnswer === index ? 'bg-[var(--theme-card)] text-[var(--theme-accent)]' : 'bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)] text-[var(--theme-muted)]'
                       }`}>
                         {String.fromCharCode(65 + index)}
                       </div>
-                      <span className="text-base">{option}</span>
+                      <span className="min-w-0 flex-1 break-words text-sm leading-6 sm:text-base">{option}</span>
                     </div>
                   </Button>
                 ))}
               </div>
 
               {/* Navigation Buttons */}
-              <div className="pt-6 flex gap-4">
+              <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:gap-4 sm:pt-6">
                 <Button 
                   onClick={prevQuestion}
                   disabled={currentQuestion === 0}
                   variant="outline"
                   size="lg"
-                  className="aiq-button-soft w-1/2"
+                  className="aiq-button-soft h-11 w-full sm:h-12 sm:w-1/2"
                 >
                   Previous
                 </Button>
@@ -376,7 +386,7 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
                   onClick={nextQuestion}
                   disabled={selectedAnswer === null}
                   size="lg"
-                  className="aiq-button-primary w-1/2 font-semibold"
+                  className="aiq-button-primary h-11 w-full font-semibold sm:h-12 sm:w-1/2"
                 >
                   {currentQuestion < quiz.questions.length - 1 ? "Next" : "Finish Quiz"}
                 </Button>

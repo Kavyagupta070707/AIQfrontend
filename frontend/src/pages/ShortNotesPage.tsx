@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Download, Mountain, Play, RotateCcw, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, Play, RotateCcw, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/study/PageHeader";
 import { studyApi } from "@/lib/api";
 import { downloadShortNotePdf, renderHighlightedText } from "@/lib/noteTools";
 import mountainNight from "@/assets/theme-mountain-night.png";
+import mountainMorning from "@/assets/theme-mountain-morning-light.png";
+import { useStudyTheme } from "@/components/study/ThemeProvider";
 
 const ShortNotesPage = ({ user }) => {
+  const { theme } = useStudyTheme();
   const [shortNotes, setShortNotes] = useState([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [cardIndex, setCardIndex] = useState(0);
@@ -30,6 +33,8 @@ const ShortNotesPage = ({ user }) => {
 
   const activeCards = activeNote?.bullets || [];
   const currentCard = activeCards[cardIndex] || "";
+  const revisionBackground = theme === "light" ? mountainMorning : mountainNight;
+  const revisionShellTheme = theme === "light" ? "revision-player-shell-light" : "revision-player-shell-dark";
 
   const startRevision = (id: string) => {
     setActiveId(id);
@@ -87,21 +92,24 @@ const ShortNotesPage = ({ user }) => {
       </section>
 
       {showPlayer && activeNote && (
-        <div className="fixed inset-0 z-50 bg-slate-950">
-          <div className="revision-player-scene relative flex h-full w-full items-center justify-center p-4" style={{ backgroundImage: `url(${mountainNight})` }}>
+        <div className="fixed inset-0 z-50 bg-[var(--theme-page)]">
+          <div
+            className="revision-player-scene relative flex h-full w-full items-center justify-center p-4"
+            style={{ backgroundImage: `url(${revisionBackground})` }}
+          >
             <Button
               type="button"
               variant="ghost"
               size="icon"
               onClick={() => setShowPlayer(false)}
-              className="absolute right-6 top-6 z-30 h-10 w-10 rounded-full text-slate-200 hover:bg-white/10 hover:text-white"
+              className="absolute right-6 top-6 z-30 h-10 w-10 rounded-full text-[var(--theme-text)] hover:bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)]"
               aria-label="Close revision cards"
             >
               <X className="h-5 w-5" />
             </Button>
 
-            <section className="revision-player-shell revision-player-shell-dark relative flex h-full max-h-[calc(100vh-32px)] w-full max-w-7xl flex-col rounded-xl border p-5">
-              <div className="revision-player-header relative z-10 flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-start sm:justify-between">
+            <section className={`revision-player-shell ${revisionShellTheme} relative flex h-full max-h-[calc(100vh-32px)] w-full max-w-7xl flex-col rounded-xl border p-5`}>
+              <div className="revision-player-header relative z-10 flex flex-col gap-4 border-b border-[var(--theme-border)] pb-5 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="revision-player-kicker text-xs font-semibold uppercase">Revision Card</p>
                     <h2 className="revision-player-title mt-2 text-2xl font-bold">{activeNote.title || "Short Notes"}</h2>
@@ -114,23 +122,8 @@ const ShortNotesPage = ({ user }) => {
                 </div>
 
                 <div className="relative z-10 mt-6 flex min-h-0 flex-1 items-center justify-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="revision-side-control revision-side-control-left"
-                    disabled={!activeCards.length || cardIndex === 0}
-                    onClick={() => setCardIndex((index) => Math.max(0, index - 1))}
-                    aria-label="Previous card"
-                  >
-                    <ArrowLeft className="h-6 w-6" />
-                  </Button>
-
-                  <article className="revision-flash-card revision-flash-card-dark relative mx-auto flex min-h-[440px] w-full max-w-2xl items-center justify-center overflow-visible text-center">
-                    <div className="revision-sign-post revision-sign-post-left" />
-                    <div className="revision-sign-post revision-sign-post-right" />
-                    <Mountain className="revision-sign-mountain" />
+                  <article className="revision-flash-card revision-flash-paper relative mx-auto flex min-h-[440px] w-full max-w-2xl items-center justify-center overflow-visible text-center">
                     <div className="revision-card-inner relative z-10">
-                      <Mountain className="revision-card-icon mx-auto h-8 w-8" />
                       <h3 className="revision-card-title mt-3 text-2xl font-bold">{activeNote.title || "Short Notes"}</h3>
                       <div className="revision-card-divider" />
                       {currentCard ? (
@@ -140,28 +133,17 @@ const ShortNotesPage = ({ user }) => {
                       )}
                     </div>
                   </article>
-
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="revision-side-control revision-side-control-right"
-                    disabled={!activeCards.length || cardIndex >= activeCards.length - 1}
-                    onClick={() => setCardIndex((index) => Math.min(activeCards.length - 1, index + 1))}
-                    aria-label="Next card"
-                  >
-                    <ArrowRight className="h-6 w-6" />
-                  </Button>
                 </div>
 
                 <div className="relative z-10 mt-5">
-                  <div className="h-2 overflow-hidden rounded-full bg-white/12">
+                  <div className="h-2 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--theme-text)_12%,transparent)]">
                     <div
                       className="h-full rounded-full bg-[var(--theme-accent)] transition-all"
                       style={{ width: `${activeCards.length ? ((cardIndex + 1) / activeCards.length) * 100 : 0}%` }}
                     />
                   </div>
 
-                  <div className="mt-5 grid gap-3 rounded-xl bg-black/18 p-4 backdrop-blur-md sm:grid-cols-3">
+                  <div className="mt-5 grid gap-3 rounded-xl bg-[color-mix(in_srgb,var(--theme-surface)_72%,transparent)] p-4 backdrop-blur-md sm:grid-cols-3">
                 <Button
                   variant="outline"
                   className="aiq-button-soft h-12"

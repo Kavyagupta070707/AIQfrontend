@@ -20,7 +20,7 @@ const ProgressSummary = ({ roadmap }) => {
           </div>
           <span className="aiq-accent text-sm font-semibold">{progress}%</span>
         </div>
-        <Progress value={progress} className="mt-3 h-2 bg-slate-800" />
+        <Progress value={progress} className="mt-3 h-2 bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)]" />
       </CardContent>
     </Card>
   );

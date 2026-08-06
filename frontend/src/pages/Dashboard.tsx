@@ -4,6 +4,7 @@ import {
   BarChart3,
   BookOpen,
   CheckCircle2,
+  ClipboardCheck,
   FileText,
   LineChart,
   ListChecks,
@@ -198,6 +199,10 @@ const Dashboard = ({ user, onCreateQuiz, onNavigate }) => {
               <Button onClick={onCreateQuiz} variant="outline" className="aiq-button-soft mt-4 w-full">
                 <Trophy className="mr-2 h-4 w-4" />
                 Generate Practice Quiz
+              </Button>
+              <Button onClick={() => onNavigate("/attended-quizzes")} variant="outline" className="aiq-button-soft mt-3 w-full">
+                <ClipboardCheck className="mr-2 h-4 w-4" />
+                View Attended Quizzes
               </Button>
             </CardContent>
           </Card>

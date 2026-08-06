@@ -62,11 +62,11 @@ const RoadmapDetailPage = () => {
         </CardContent>
       </Card>
 
-      <div className="relative overflow-hidden rounded-2xl bg-[#111418] px-4 py-10 shadow-2xl shadow-black/25">
-        <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(90deg,rgba(255,255,255,.06)_1px,transparent_1px),linear-gradient(rgba(255,255,255,.06)_1px,transparent_1px)] [background-size:54px_54px]" />
+      <div className="roadmap-map-scene relative overflow-hidden rounded-2xl border px-4 py-10">
+        <div className="roadmap-map-grid absolute inset-0 opacity-50" />
 
         <div className="relative mx-auto hidden max-w-5xl md:block" style={{ height: mapHeight }}>
-          <div className="absolute left-1/2 top-7 h-[calc(100%-56px)] -translate-x-1/2 border-l-2 border-dashed border-slate-600" />
+          <div className="absolute left-1/2 top-7 h-[calc(100%-56px)] -translate-x-1/2 border-l-2 border-dashed border-[color-mix(in_srgb,var(--theme-accent)_36%,transparent)]" />
 
           {roadmap.steps.map((step: any, index: number) => {
             const unlocked = isStepUnlocked(roadmap.steps, index);
@@ -79,7 +79,7 @@ const RoadmapDetailPage = () => {
               <div key={step._id || index} className="absolute left-0 w-full" style={{ top }}>
                 <div
                   className={`absolute top-[58px] h-0 w-[60px] border-t-2 border-dashed ${
-                    completed ? "border-teal-400" : "border-slate-600"
+                    completed ? "border-teal-400" : "border-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]"
                   }`}
                   style={{ left: alignRight ? "calc(50% + 28px)" : "calc(50% - 88px)" }}
                 />
@@ -91,7 +91,7 @@ const RoadmapDetailPage = () => {
                       ? "border-teal-300 bg-teal-500 text-white"
                       : unlocked
                         ? "border-rose-200 bg-rose-500 text-white"
-                        : "border-slate-700 bg-slate-800 text-slate-400"
+                        : "roadmap-node-locked"
                   } ${isCurrent && unlocked ? "ring-4 ring-amber-300/30" : ""}`}
                   aria-label={`Open day ${index + 1}`}
                 >
@@ -100,17 +100,17 @@ const RoadmapDetailPage = () => {
 
                 <button
                   onClick={() => openStep(index)}
-                  className={`group absolute z-10 flex min-h-[116px] w-[360px] items-center gap-4 rounded-2xl border p-5 text-left shadow-xl transition hover:-translate-y-0.5 ${
+                  className={`roadmap-node-card group absolute z-10 flex min-h-[116px] w-[360px] items-center gap-4 rounded-2xl border p-5 text-left shadow-xl transition hover:-translate-y-0.5 ${
                     completed
-                      ? "border-teal-400/50 bg-teal-500/15 text-teal-50"
+                      ? "roadmap-node-completed border-teal-400/50 bg-teal-500/15"
                       : unlocked
-                        ? "border-rose-400/40 bg-rose-500/20 text-rose-50"
-                        : "border-slate-600 bg-slate-800/80 text-slate-400"
+                        ? "roadmap-node-current border-rose-400/40 bg-rose-500/20"
+                        : "roadmap-node-locked"
                   } ${isCurrent && unlocked ? "ring-4 ring-rose-400/20" : ""}`}
                   style={{ left: alignRight ? "calc(50% + 88px)" : "calc(50% - 448px)" }}
                 >
                   <span className="min-w-0">
-                    <span className="inline-flex rounded-full bg-white/10 px-2 py-1 text-xs font-semibold uppercase tracking-normal opacity-90">Day {index + 1}</span>
+                    <span className="inline-flex rounded-full bg-[color-mix(in_srgb,var(--theme-text)_8%,transparent)] px-2 py-1 text-xs font-semibold uppercase tracking-normal opacity-90">Day {index + 1}</span>
                     <span className="mt-1 block text-lg font-semibold leading-6">{step.title}</span>
                     <span className="mt-1 line-clamp-2 block text-xs opacity-75">{step.description}</span>
                   </span>
@@ -136,16 +136,16 @@ const RoadmapDetailPage = () => {
               <button
                 key={step._id || index}
                 onClick={() => openStep(index)}
-                className={`group relative z-10 flex min-h-[88px] w-full items-center gap-4 rounded-2xl border p-4 text-left shadow-xl ${
+                  className={`roadmap-node-card group relative z-10 flex min-h-[88px] w-full items-center gap-4 rounded-2xl border p-4 text-left shadow-xl ${
                   completed
-                    ? "border-teal-400/50 bg-teal-500/15 text-teal-50"
+                    ? "roadmap-node-completed border-teal-400/50 bg-teal-500/15"
                     : unlocked
-                      ? "border-rose-400/40 bg-rose-500/20 text-rose-50"
-                      : "border-slate-600 bg-slate-800/80 text-slate-400"
+                      ? "roadmap-node-current border-rose-400/40 bg-rose-500/20"
+                      : "roadmap-node-locked"
                 } ${isCurrent && unlocked ? "ring-4 ring-rose-400/20" : ""}`}
               >
                 <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${
-                  completed ? "bg-teal-500 text-white" : unlocked ? "bg-rose-500 text-white" : "bg-slate-700 text-slate-400"
+                  completed ? "bg-teal-500 text-white" : unlocked ? "bg-rose-500 text-white" : "roadmap-node-locked border border-[var(--theme-border)]"
                 }`}>
                   {completed ? <CheckCircle2 className="h-6 w-6" /> : unlocked ? <Play className="h-6 w-6" /> : <Lock className="h-5 w-5" />}
                 </span>

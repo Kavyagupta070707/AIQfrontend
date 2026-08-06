@@ -86,7 +86,7 @@ const RoadmapStatusBadge = ({ status }) => {
     completed: "border-emerald-400/25 bg-emerald-500/10 text-emerald-300",
     current: "border-violet-400/25 bg-violet-500/10 text-violet-300",
     upcoming: "border-blue-400/25 bg-blue-500/10 text-blue-300",
-    locked: "border-slate-500/25 bg-slate-500/10 text-slate-400",
+    locked: "border-[var(--theme-border)] bg-[var(--theme-subcard)] text-[var(--theme-muted)]",
   };
 
   const labels = {
@@ -148,11 +148,11 @@ const PreviewLessonCard = ({ step }) => {
   const current = step.status === "current";
 
   return (
-    <div className={`rounded-2xl border p-4 shadow-xl shadow-black/20 ${current ? "border-rose-300/35 bg-rose-500/25" : "aiq-subcard"}`}>
-      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold uppercase ${current ? "bg-white/10 text-rose-50" : "bg-white/10 text-slate-400"}`}>
+    <div className={`rounded-2xl border p-4 shadow-xl shadow-black/10 ${current ? "border-rose-400/35 bg-rose-500/20 text-[var(--theme-text)]" : "aiq-subcard"}`}>
+      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold uppercase ${current ? "bg-rose-500/12 text-rose-200" : "bg-[color-mix(in_srgb,var(--theme-text)_8%,transparent)] text-[var(--theme-muted)]"}`}>
         Day {step.day}
       </span>
-      <h3 className={`mt-3 text-base font-semibold ${current ? "text-white" : "aiq-heading"}`}>{step.title}</h3>
+      <h3 className={`mt-3 text-base font-semibold ${current ? "text-[var(--theme-text)]" : "aiq-heading"}`}>{step.title}</h3>
       <p className={`mt-2 text-xs leading-5 ${current ? "text-rose-50/85" : "aiq-muted"}`}>{step.description}</p>
     </div>
   );
@@ -254,7 +254,7 @@ const RoadmapCard = ({ roadmap, onDelete }) => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" aria-label={`Open actions for ${roadmap.title}`} className="h-8 w-8 text-slate-400 hover:bg-white/5 hover:text-slate-100">
+            <Button size="icon" variant="ghost" aria-label={`Open actions for ${roadmap.title}`} className="h-8 w-8 text-[var(--theme-muted)] hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]">
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -269,11 +269,11 @@ const RoadmapCard = ({ roadmap, onDelete }) => {
 
       <div className="aiq-muted mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <p className="flex items-center gap-2">
-          <Clock3 className="h-4 w-4 text-slate-500" />
+          <Clock3 className="h-4 w-4 text-[var(--theme-muted)]" />
           {roadmap.steps?.length || 0} days
         </p>
         <p className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-slate-500" />
+          <CalendarDays className="h-4 w-4 text-[var(--theme-muted)]" />
           {getLastUpdated(roadmap)}
         </p>
       </div>
@@ -333,7 +333,7 @@ const RoadmapFilters = ({ tab, setTab, query, setQuery, sort, setSort, counts })
 
       <div className="grid gap-3 md:grid-cols-[1fr_220px]">
         <label className="relative block">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--theme-muted)]" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -495,7 +495,7 @@ const RoadmapsPage = ({ user }) => {
         {error && (
           <div className="rounded-xl border border-red-400/20 bg-red-500/10 p-4 text-sm text-red-200">
             {error}
-            <Button type="button" variant="ghost" onClick={loadRoadmaps} className="ml-2 h-auto p-0 text-red-100 underline hover:bg-transparent hover:text-white">
+            <Button type="button" variant="ghost" onClick={loadRoadmaps} className="ml-2 h-auto p-0 text-red-100 underline hover:bg-transparent hover:text-red-200">
               Retry
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import { BookOpen, FileText, Home, ListChecks, LogOut, NotebookPen, PlusCircle, StickyNote } from "lucide-react";
+import { BookOpen, FileText, Home, ListChecks, LogOut, Moon, NotebookPen, PlusCircle, StickyNote, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useStudyTheme } from "@/components/study/ThemeProvider";
 
 interface NavbarProps {
   user: any;
@@ -17,6 +18,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ user, onLogout, onNavigate }: NavbarProps) => {
+  const { theme, toggleTheme } = useStudyTheme();
   if (!user) return null;
   const currentPath = window.location.pathname;
 
@@ -99,6 +101,17 @@ const Navbar = ({ user, onLogout, onNavigate }: NavbarProps) => {
 
           {/* User Menu */}
           <div className="flex items-center space-x-3">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="aiq-button-soft h-10 w-10 rounded-md"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             <div className="hidden sm:flex flex-col items-end">
               <span className="aiq-heading text-sm font-semibold">
                 {user.username}
@@ -124,9 +137,7 @@ const Navbar = ({ user, onLogout, onNavigate }: NavbarProps) => {
                     <p className="text-sm font-medium leading-none">
                       {user.username}
                     </p>
-                    <p className="aiq-muted text-xs leading-none">
-                      Member since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
-                    </p>
+                    
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -145,6 +156,18 @@ const Navbar = ({ user, onLogout, onNavigate }: NavbarProps) => {
                 <DropdownMenuItem onClick={() => onNavigate?.('/notes')}>
                   <NotebookPen className="mr-2 h-4 w-4" />
                   <span>Notes</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onNavigate?.('/short-notes')}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Short Notes</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onNavigate?.('/sticky-notes')}>
+                  <StickyNote className="mr-2 h-4 w-4" />
+                  <span>Sticky Notes</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onNavigate?.('/attended-quizzes')}>
+                  <ListChecks className="mr-2 h-4 w-4" />
+                  <span>Attended Quizzes</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onLogout} className="text-red-600">

@@ -113,10 +113,10 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                     return (
                       <div 
                         key={index} 
-                        className={`p-4 rounded-lg border-2 ${
+                        className={`quiz-review-card p-4 rounded-lg border-2 ${
                           isCorrect 
-                            ? 'bg-emerald-500/10 border-emerald-500/50' 
-                            : 'bg-red-500/10 border-red-500/50'
+                            ? 'quiz-review-card-correct' 
+                            : 'quiz-review-card-wrong'
                         }`}
                       >
                         <div className="flex items-start gap-3 mb-3">
@@ -140,12 +140,12 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                             return (
                               <div
                                 key={optIndex}
-                                className={`p-3 rounded-lg text-sm ${
+                                className={`quiz-answer-option p-3 rounded-lg text-sm ${
                                   isCorrectAnswer
-                                    ? 'bg-emerald-500/20 border-2 border-emerald-500/50 text-emerald-300'
+                                    ? 'quiz-answer-correct'
                                     : isUserAnswer
-                                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-300'
-                                    : 'aiq-subcard aiq-muted'
+                                    ? 'quiz-answer-wrong'
+                                    : 'quiz-answer-neutral'
                                 }`}
                               >
                                 <div className="flex items-center gap-2">

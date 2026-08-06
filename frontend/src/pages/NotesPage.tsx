@@ -338,7 +338,7 @@ const NotesPage = ({ user }) => {
             <p className="aiq-accent text-xs font-semibold uppercase tracking-normal">{libraryTitle}</p>
             <span className="aiq-muted text-xs">{visibleNotes.length}</span>
           </div>
-          <div className="notes-saved-list mt-3 space-y-2 overflow-y-auto pr-1">
+          <div className="notes-saved-list theme-scrollbar mt-3 space-y-2 overflow-y-auto pr-2">
             {visibleNotes.map((note: any) => (
               <button
                 key={note._id}
@@ -347,7 +347,6 @@ const NotesPage = ({ user }) => {
               >
                 <p className="aiq-heading truncate text-sm font-semibold">{note.title || "Untitled note"}</p>
                 <p className="aiq-muted mt-1 truncate text-xs">{note.subject || "General"}</p>
-                <p className="aiq-muted mt-2 line-clamp-2 text-xs leading-5">{note.content || "No content yet."}</p>
               </button>
             ))}
             {!visibleNotes.length && (
@@ -466,18 +465,19 @@ const NotesPage = ({ user }) => {
           </div>
         </section>
 
-        <div className="mt-6 flex flex-wrap justify-end gap-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-end">
           {active._id && (
-            <Button onClick={() => remove(active._id)} variant="outline" className="border-red-400/30 bg-red-500/10 text-red-500 hover:bg-red-500/15">
+            <Button onClick={() => remove(active._id)} variant="outline" className="h-11 w-full justify-center border-red-400/30 bg-red-500/10 text-red-500 hover:bg-red-500/15 sm:w-auto">
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </Button>
           )}
-          <Button onClick={makeShortNotes} variant="outline" disabled={loadingShort} className="aiq-button-soft">
+          <Button onClick={makeShortNotes} variant="outline" disabled={loadingShort} className="aiq-button-soft h-11 w-full justify-center sm:w-auto">
             {loadingShort ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <NotebookPen className="mr-2 h-4 w-4" />}
-            Save as Short Notes
+            <span className="sm:hidden">Short Notes</span>
+            <span className="hidden sm:inline">Save as Short Notes</span>
           </Button>
-          <Button onClick={() => downloadNotePdf(active) || toast.error("Could not download the PDF.")} variant="outline" disabled={!active.content?.trim()} className="aiq-button-soft">
+          <Button onClick={() => downloadNotePdf(active) || toast.error("Could not download the PDF.")} variant="outline" disabled={!active.content?.trim()} className="aiq-button-soft h-11 w-full justify-center sm:w-auto">
             <Download className="mr-2 h-4 w-4" />
             PDF
           </Button>
@@ -488,12 +488,12 @@ const NotesPage = ({ user }) => {
             }}
             variant="outline"
             disabled={!active.content?.trim()}
-            className="aiq-button-soft"
+            className="aiq-button-soft h-11 w-full justify-center sm:w-auto"
           >
             <BookOpen className="mr-2 h-4 w-4" />
             View Notes
           </Button>
-          <Button onClick={save} className="aiq-button-primary">
+          <Button onClick={save} className="aiq-button-primary col-span-2 h-11 w-full justify-center sm:col-span-1 sm:w-auto">
             <Save className="mr-2 h-4 w-4" />
             Save Note
           </Button>
