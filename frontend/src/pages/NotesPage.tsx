@@ -370,11 +370,7 @@ const NotesPage = ({ user }) => {
             </h1>
             <p className="aiq-muted mt-2 text-sm">Capture your ideas, organize your knowledge, and revise smarter.</p>
           </div>
-          <Button variant="outline" className="aiq-button-soft">
-            <FileText className="mr-2 h-4 w-4" />
-            Template
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
+         
         </div>
 
         <section className="notes-ai-strip mt-7 rounded-xl border p-5">
@@ -477,7 +473,7 @@ const NotesPage = ({ user }) => {
             {loadingShort ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <NotebookPen className="mr-2 h-4 w-4" />}
             Save as Short Notes
           </Button>
-          <Button onClick={() => downloadNotePdf(active) || toast.error("Please allow popups to download the PDF.")} variant="outline" disabled={!active.content?.trim()} className="aiq-button-soft">
+          <Button onClick={() => downloadNotePdf(active) || toast.error("Could not download the PDF.")} variant="outline" disabled={!active.content?.trim()} className="aiq-button-soft">
             <Download className="mr-2 h-4 w-4" />
             PDF
           </Button>

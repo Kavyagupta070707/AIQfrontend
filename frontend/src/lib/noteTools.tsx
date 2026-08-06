@@ -87,35 +87,228 @@ const markdownToHtml = (value: string) => {
 const plainTitle = (value: string) =>
   String(value || "Study Notes").replace(/[\\/:*?"<>|]+/g, "").trim() || "Study Notes";
 
-const openPrintWindow = (title: string, body: string) => {
-  const printWindow = window.open("", "_blank");
-  if (!printWindow) return false;
+type PdfLine = {
+  text: string;
+  size?: number;
+  font?: "regular" | "bold" | "mono";
+  indent?: number;
+  gapBefore?: number;
+};
 
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>${escapeHtml(plainTitle(title))}</title>
-        <style>
-          body { font-family: Arial, sans-serif; color: #0f172a; line-height: 1.65; padding: 32px; }
-          h1 { font-size: 26px; margin: 0 0 4px; }
-          h2 { color: #0f766e; font-size: 18px; margin: 24px 0 8px; }
-          h3, h4 { color: #1e293b; font-size: 15px; margin: 18px 0 8px; }
-          p, li { font-size: 13px; }
-          .meta { color: #475569; margin-bottom: 24px; }
-          .content { white-space: normal; }
-          mark { background: #fef08a; border-radius: 3px; padding: 0 3px; }
-          ul { padding-left: 22px; }
-          pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; white-space: pre-wrap; }
-          code { color: #0f766e; font-family: Consolas, monospace; }
-          .spacer { height: 8px; }
-        </style>
-      </head>
-      <body>${body}</body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
+const cleanPdfText = (value: string) =>
+  String(value || "")
+    .replace(/==(.+?)==/g, "$1")
+    .replace(/!\[([^\]]*?)\]\((https?:\/\/[^)\s]+?)\)/g, "$1 $2")
+    .replace(/\[([^\]]+?)\]\((https?:\/\/[^)\s]+?)\)/g, "$1 ($2)")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`([^`]+?)`/g, "$1")
+    .replace(/<u>(.+?)<\/u>/g, "$1")
+    .replace(/[•–—]/g, "-")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, "");
+
+const parseMarkdownLines = (value: string): PdfLine[] => {
+  const lines = String(value || "").split(/\r?\n/);
+  const output: PdfLine[] = [];
+  let inCode = false;
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith("```")) {
+      inCode = !inCode;
+      if (!inCode) output.push({ text: "", gapBefore: 6 });
+      return;
+    }
+
+    if (inCode) {
+      output.push({ text: line || " ", size: 10, font: "mono", indent: 10 });
+      return;
+    }
+
+    if (!trimmed) {
+      output.push({ text: "", gapBefore: 8 });
+      return;
+    }
+
+    const heading = trimmed.match(/^(#{1,4})\s+(.+)$/);
+    if (heading) {
+      output.push({
+        text: cleanPdfText(heading[2]),
+        size: heading[1].length <= 2 ? 15 : 12,
+        font: "bold",
+        gapBefore: 12,
+      });
+      return;
+    }
+
+    const bullet = trimmed.match(/^(\s*)[-*]\s+(.+)$/);
+    if (bullet) {
+      const depth = Math.floor((bullet[1]?.length || 0) / 2);
+      const text = cleanPdfText(bullet[2]).replace(/^[-*]\s+/, "");
+      output.push({
+        text: `- ${text}`,
+        size: 11,
+        indent: 12 + depth * 12,
+        font: /:$/.test(text) ? "bold" : "regular",
+      });
+      return;
+    }
+
+    const text = cleanPdfText(trimmed).replace(/^[-*]\s+/, "");
+    output.push({
+      text,
+      size: 11,
+      font: /:$/.test(text) ? "bold" : "regular",
+      gapBefore: /:$/.test(text) ? 6 : undefined,
+    });
+  });
+
+  return output;
+};
+
+const parseShortNoteBullets = (bullets: string[]): PdfLine[] =>
+  bullets.flatMap((bullet) => {
+    const parsed = parseMarkdownLines(bullet);
+    if (parsed.length) {
+      return parsed.map((line) => {
+        const text = cleanPdfText(line.text).trim();
+        const normalized = text.replace(/^[-*]\s+/, "");
+        const looksLikeSection = /:$/.test(normalized);
+        const isAlreadyBullet = /^- /.test(text);
+
+        return {
+          ...line,
+          text: looksLikeSection ? normalized : isAlreadyBullet ? text : `- ${normalized}`,
+          indent: looksLikeSection ? 0 : line.indent || 12,
+          font: looksLikeSection ? "bold" as const : line.font || "regular" as const,
+          gapBefore: looksLikeSection ? 8 : line.gapBefore,
+        };
+      });
+    }
+
+    return [];
+  });
+
+const pdfEscape = (value: string) =>
+  cleanPdfText(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)");
+
+const wrapPdfText = (text: string, size: number, font: PdfLine["font"], maxWidth: number) => {
+  if (!text.trim()) return [""];
+  const avgCharWidth = size * (font === "mono" ? 0.6 : 0.52);
+  const maxChars = Math.max(18, Math.floor(maxWidth / avgCharWidth));
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+
+  words.forEach((word) => {
+    if (word.length > maxChars) {
+      if (current) lines.push(current);
+      for (let index = 0; index < word.length; index += maxChars) {
+        lines.push(word.slice(index, index + maxChars));
+      }
+      current = "";
+      return;
+    }
+
+    const next = current ? `${current} ${word}` : word;
+    if (next.length > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  });
+
+  if (current) lines.push(current);
+  return lines;
+};
+
+const createPdfBlob = (title: string, lines: PdfLine[]) => {
+  const width = 595.28;
+  const height = 841.89;
+  const margin = 54;
+  const bottom = 54;
+  const maxWidth = width - margin * 2;
+  const pages: string[] = [];
+  let y = height - margin;
+  let stream = "";
+
+  const addPage = () => {
+    if (stream) pages.push(stream);
+    stream = "";
+    y = height - margin;
+  };
+
+  const addLine = (line: PdfLine) => {
+    const size = line.size || 11;
+    const font = line.font || "regular";
+    const lineHeight = size * 1.45;
+    const indent = line.indent || 0;
+    const wrapped = wrapPdfText(line.text, size, font, maxWidth - indent);
+    y -= line.gapBefore || 0;
+
+    wrapped.forEach((text) => {
+      if (y < bottom) addPage();
+      const fontRef = font === "bold" ? "F2" : font === "mono" ? "F3" : "F1";
+      stream += `BT /${fontRef} ${size} Tf 0.06 0.09 0.14 rg 1 0 0 1 ${margin + indent} ${y.toFixed(2)} Tm (${pdfEscape(text)}) Tj ET\n`;
+      y -= lineHeight;
+    });
+  };
+
+  addLine({ text: title, size: 22, font: "bold" });
+  addLine({ text: new Date().toLocaleDateString(), size: 9, gapBefore: 2 });
+  y -= 14;
+  lines.forEach(addLine);
+  if (stream) pages.push(stream);
+
+  const objects: string[] = [];
+  objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
+  objects[3] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
+  objects[4] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>";
+  objects[5] = "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>";
+
+  const pageRefs: string[] = [];
+  pages.forEach((page, index) => {
+    const pageId = 6 + index * 2;
+    const contentId = pageId + 1;
+    pageRefs.push(`${pageId} 0 R`);
+    objects[pageId] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${width} ${height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents ${contentId} 0 R >>`;
+    objects[contentId] = `<< /Length ${page.length} >>\nstream\n${page}endstream`;
+  });
+  objects[2] = `<< /Type /Pages /Kids [${pageRefs.join(" ")}] /Count ${pages.length} >>`;
+
+  let pdf = "%PDF-1.4\n";
+  const offsets = [0];
+  for (let id = 1; id < objects.length; id += 1) {
+    if (!objects[id]) continue;
+    offsets[id] = pdf.length;
+    pdf += `${id} 0 obj\n${objects[id]}\nendobj\n`;
+  }
+  const xrefOffset = pdf.length;
+  pdf += `xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+  for (let id = 1; id < objects.length; id += 1) {
+    pdf += `${String(offsets[id] || 0).padStart(10, "0")} 00000 n \n`;
+  }
+  pdf += `trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+  return new Blob([pdf], { type: "application/pdf" });
+};
+
+const downloadPdfFile = (title: string, lines: PdfLine[]) => {
+  const url = URL.createObjectURL(createPdfBlob(title, lines));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${plainTitle(title)}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
   return true;
 };
 
@@ -258,23 +451,35 @@ export const renderFormattedNoteContent = (value: string) => {
 };
 
 export const downloadNotePdf = (note: any) =>
-  openPrintWindow(
-    note.title,
-    `
-      <h1>${escapeHtml(note.title || "Study Notes")}</h1>
-      <p class="meta">${escapeHtml(note.subject || "General")}</p>
-      <div class="content">${markdownToHtml(note.content || "")}</div>
-    `
-  );
+  downloadPdfFile(note.title || "Study Notes", [
+    { text: note.subject || "General", size: 11, font: "bold", gapBefore: 4 },
+    ...parseMarkdownLines(note.content || ""),
+  ]);
 
 export const downloadShortNotePdf = (note: any) =>
-  openPrintWindow(
-    note.title,
-    `
-      <h1>${escapeHtml(note.title || "Short Notes")}</h1>
-      <p class="meta">${escapeHtml(note.subject || "General")}</p>
-      <ul>
-        ${(note.bullets || []).map((bullet: string) => `<li>${highlightedHtml(bullet)}</li>`).join("")}
-      </ul>
-    `
-  );
+  downloadPdfFile(note.title || "Short Notes", [
+    { text: note.subject || "General", size: 11, font: "bold", gapBefore: 4 },
+    ...parseShortNoteBullets(note.bullets || []),
+  ]);
+
+export const downloadRoadmapStepPdf = (roadmap: any, step: any, index: number) =>
+  downloadPdfFile(`${roadmap.title || "Roadmap"} - Day ${index + 1}`, [
+    { text: `Day ${index + 1}: ${step.title || "Study Section"}`, size: 13, font: "bold", gapBefore: 4 },
+    { text: "Study Material", size: 15, font: "bold", gapBefore: 14 },
+    ...parseMarkdownLines(step.studyMaterial || step.description || "No study material added yet."),
+    { text: "Key Points", size: 15, font: "bold", gapBefore: 14 },
+    ...((step.keyPoints || []).length ? step.keyPoints : [step.description || ""]).map((item: string) => ({ text: `- ${cleanPdfText(item)}`, size: 11, indent: 12 })),
+    { text: "Examples", size: 15, font: "bold", gapBefore: 14 },
+    ...(step.examples || []).map((item: string) => ({ text: `- ${cleanPdfText(item)}`, size: 11, indent: 12 })),
+    { text: "Practice Questions", size: 15, font: "bold", gapBefore: 14 },
+    ...(step.practiceQuestions || []).map((item: string) => ({ text: `- ${cleanPdfText(item)}`, size: 11, indent: 12 })),
+    { text: "Resources", size: 15, font: "bold", gapBefore: 14 },
+    ...(step.resources || []).map((resource: any) => {
+      const normalized = typeof resource === "string" ? { title: resource, url: "", description: "" } : resource;
+      return {
+        text: `- ${cleanPdfText([normalized.title, normalized.url, normalized.description].filter(Boolean).join(": "))}`,
+        size: 11,
+        indent: 12,
+      };
+    }),
+  ]);

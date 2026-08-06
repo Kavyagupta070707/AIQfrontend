@@ -66,7 +66,7 @@ const ShortNotesPage = ({ user }) => {
                     </Button>
                   </div>
                   <div className="mt-auto flex items-center gap-3 pt-6">
-                    <Button variant="outline" className="aiq-button-soft shrink-0" onClick={() => downloadShortNotePdf(note) || toast.error("Please allow popups to download the PDF.")}>
+                    <Button variant="outline" className="aiq-button-soft shrink-0" onClick={() => downloadShortNotePdf(note) || toast.error("Could not download the PDF.")}>
                       <Download className="h-4 w-4" />
                     </Button>
                     <Button onClick={() => startRevision(note._id)} className="aiq-button-primary flex-1">
@@ -107,7 +107,7 @@ const ShortNotesPage = ({ user }) => {
                     <h2 className="revision-player-title mt-2 text-2xl font-bold">{activeNote.title || "Short Notes"}</h2>
                     <p className="revision-player-meta mt-1 text-sm">Card {activeCards.length ? cardIndex + 1 : 0} of {activeCards.length}</p>
                   </div>
-                  <Button variant="outline" className="aiq-button-soft" onClick={() => downloadShortNotePdf(activeNote) || toast.error("Please allow popups to download the PDF.")}>
+                  <Button variant="outline" className="aiq-button-soft" onClick={() => downloadShortNotePdf(activeNote) || toast.error("Could not download the PDF.")}>
                     <Download className="mr-2 h-4 w-4" />
                     Export
                   </Button>

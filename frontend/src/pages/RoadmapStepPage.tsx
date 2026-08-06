@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageHeader from "@/components/study/PageHeader";
 import { studyApi } from "@/lib/api";
+import { downloadRoadmapStepPdf } from "@/lib/noteTools";
 
 const isStepUnlocked = (steps: any[], index: number) => {
   if (index === 0) return true;
@@ -57,51 +58,7 @@ const RoadmapStepPage = ({ onQuizGenerated }) => {
   };
 
   const downloadPdf = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      toast.error("Please allow popups to download the PDF.");
-      return;
-    }
-
-    const resources = (step.resources || [])
-      .map((resource: any) => {
-        const normalized = typeof resource === "string" ? { title: resource, url: "", description: "" } : resource;
-        return `<li><strong>${normalized.title || "Resource"}:</strong> ${normalized.url ? `<a href="${normalized.url}">${normalized.url}</a>` : ""} ${normalized.description || ""}</li>`;
-      })
-      .join("");
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>${roadmap.title} - Day ${index + 1}</title>
-          <style>
-            body { font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6; padding: 32px; }
-            h1 { font-size: 24px; margin-bottom: 4px; }
-            h2 { font-size: 18px; margin-top: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
-            p, li { font-size: 13px; }
-            .meta { color: #475569; margin-bottom: 24px; }
-            .material { white-space: pre-wrap; }
-          </style>
-        </head>
-        <body>
-          <h1>${roadmap.title}</h1>
-          <p class="meta">Day ${index + 1}: ${step.title}</p>
-          <h2>Study Material</h2>
-          <p class="material">${step.studyMaterial || step.description || "No study material added yet."}</p>
-          <h2>Key Points</h2>
-          <ul>${(step.keyPoints || []).map((item: string) => `<li>${item}</li>`).join("")}</ul>
-          <h2>Examples</h2>
-          <ul>${(step.examples || []).map((item: string) => `<li>${item}</li>`).join("")}</ul>
-          <h2>Practice Questions</h2>
-          <ul>${(step.practiceQuestions || []).map((item: string) => `<li>${item}</li>`).join("")}</ul>
-          <h2>Resources</h2>
-          <ul>${resources}</ul>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+    downloadRoadmapStepPdf(roadmap, step, index) || toast.error("Could not download the PDF.");
   };
 
   if (!roadmap) return <p className="aiq-muted text-sm">Loading study section...</p>;
