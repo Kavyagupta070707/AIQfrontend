@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { studyApi } from "@/lib/api";
-import { downloadNotePdf, renderFormattedNoteContent } from "@/lib/noteTools";
+import { downloadNotePdf, normalizeNoteMarkdown, renderFormattedNoteContent } from "@/lib/noteTools";
 
 const emptyNote = { title: "", subject: "", content: "", tags: [] };
 
@@ -75,7 +75,7 @@ const NotesPage = ({ user }) => {
 
   const save = async () => {
     if (!active.title.trim()) return toast.error("Add a note title");
-    const payload = { ...active, createdBy: user._id };
+    const payload = { ...active, content: normalizeNoteMarkdown(active.content), createdBy: user._id };
     const res = active._id ? await studyApi.updateNote(active._id, payload) : await studyApi.saveNote(payload);
     setActive(res.data);
     await load();
@@ -94,7 +94,11 @@ const NotesPage = ({ user }) => {
     setLoadingNotes(true);
     try {
       const generated = await studyApi.generateNotes({ topic, subject: active.subject });
-      const saved = await studyApi.saveNote({ ...generated.data, createdBy: user._id });
+      const cleanedNote = {
+        ...generated.data,
+        content: normalizeNoteMarkdown(generated.data?.content),
+      };
+      const saved = await studyApi.saveNote({ ...cleanedNote, createdBy: user._id });
       setActive(saved.data);
       await load();
       toast.success("Detailed notes generated");
@@ -250,7 +254,7 @@ const NotesPage = ({ user }) => {
     setHistory([]);
     setFuture([]);
     setBookPage(0);
-    setActive(note);
+    setActive({ ...note, content: normalizeNoteMarkdown(note.content) });
   };
   const selectLibraryView = (view: string) => {
     setLibraryView(view);

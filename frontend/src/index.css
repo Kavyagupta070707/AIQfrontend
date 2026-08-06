@@ -586,6 +586,40 @@ All colors MUST be HSL.
     text-shadow: none;
   }
 
+  .notes-book-table-wrap {
+    border-radius: 8px;
+    border: 1px solid rgba(20, 83, 45, 0.18);
+    background: rgba(255, 250, 231, 0.72);
+    box-shadow: 0 8px 18px rgba(80, 58, 25, 0.08);
+  }
+
+  .notes-book-table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    font-family: "Segoe Print", "Bradley Hand ITC", "Comic Sans MS", cursive;
+    color: #24313a;
+  }
+
+  .notes-book-table th,
+  .notes-book-table td {
+    border-bottom: 1px solid rgba(20, 83, 45, 0.14);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .notes-book-table th {
+    background: rgba(20, 116, 86, 0.12);
+    color: #0f5f57;
+    font-weight: 800;
+  }
+
+  .notes-book-table tr:last-child td {
+    border-bottom: 0;
+  }
+
   @keyframes notes-page-flip {
     from {
       opacity: 0.2;
