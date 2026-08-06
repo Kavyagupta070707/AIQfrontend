@@ -57,12 +57,12 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
 
   const question = quiz.questions[currentQuestionIndex];
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-20">
+    <div className="py-8 text-[var(--theme-text)]">
       <div className="container mx-auto px-4 max-w-4xl">
         <Button
           variant="ghost"
           onClick={onBack}
-          className="mb-8 text-slate-300 hover:text-white"
+          className="aiq-muted mb-8 hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Create Another Quiz
@@ -70,26 +70,26 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Quiz Info */}
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-white">
+              <CardTitle className="aiq-heading text-2xl font-bold">
                 Quiz Generated Successfully!
               </CardTitle>
-              <p className="text-slate-400">
-                Your quiz about <span className="font-semibold text-cyan-400">{quiz.topic}</span> is ready to share
+              <p className="aiq-muted">
+                Your quiz about <span className="font-semibold text-[var(--theme-accent)]">{quiz.topic}</span> is ready to share
               </p>
             </CardHeader>
 
             <CardContent className="space-y-6">
               {/* Quiz Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-slate-900/50 rounded-lg">
-                  <div className="text-2xl font-bold text-cyan-400">{quiz.questions.length}</div>
-                  <div className="text-sm text-slate-400">Questions</div>
+                <div className="aiq-subcard rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-[var(--theme-accent)]">{quiz.questions.length}</div>
+                  <div className="aiq-muted text-sm">Questions</div>
                 </div>
-                <div className="text-center p-4 bg-slate-900/50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-400">{quiz.participantCount || quiz.participants?.length || 0}</div>
-                  <div className="text-sm text-slate-400">Participants</div>
+                <div className="aiq-subcard rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-[var(--theme-accent)]">{quiz.participantCount || quiz.participants?.length || 0}</div>
+                  <div className="aiq-muted text-sm">Participants</div>
                 </div>
               </div>
 
@@ -98,18 +98,18 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
                 <Button
                   onClick={() => setShowQRCode(!showQRCode)}
                   variant="outline"
-                  className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
+                  className="aiq-button-soft w-full"
                 >
                   <QrCode className="w-4 h-4 mr-2" />
                   {showQRCode ? "Hide QR Code" : "Show QR Code"}
                 </Button>
 
                 <div className="flex gap-2">
-                  <Button onClick={copyToClipboard} variant="outline" className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700">
+                  <Button onClick={copyToClipboard} variant="outline" className="aiq-button-soft flex-1">
                     <Copy className="w-4 h-4 mr-2" />
                     Copy Link
                   </Button>
-                  <Button onClick={shareQuiz} variant="outline" className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700">
+                  <Button onClick={shareQuiz} variant="outline" className="aiq-button-soft flex-1">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
                   </Button>
@@ -117,14 +117,14 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
               </div>
 
               {/* Start Quiz */}
-              <Button onClick={handleStartQuiz} className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900">
+              <Button onClick={handleStartQuiz} className="aiq-button-primary w-full">
                 <Users className="w-4 h-4 mr-2" />
                 Attend Quiz
               </Button>
               
               {/* View Leaderboard */}
               {(quiz.participantCount > 0 || quiz.participants?.length > 0) && (
-                <Button onClick={handleViewLeaderboard} variant="outline" className="w-full border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/10">
+                <Button onClick={handleViewLeaderboard} variant="outline" className="w-full border-yellow-500/50 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/15">
                   <Trophy className="w-4 h-4 mr-2" />
                   View Leaderboard
                 </Button>
@@ -133,9 +133,9 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
           </Card>
 
           {/* QR Code / Questions Preview */}
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardHeader>
-              <CardTitle className="text-xl text-white">
+              <CardTitle className="aiq-heading text-xl">
                 {showQRCode ? "Scan to Join" : "Questions Preview"}
               </CardTitle>
             </CardHeader>
@@ -144,17 +144,17 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
               {showQRCode ? (
                 <div className="text-center space-y-4">
                   <QRCodeGenerator value={quizUrl} size={200} />
-                  <p className="text-sm text-slate-400">
+                  <p className="aiq-muted text-sm">
                     Participants can scan this QR code to join the quiz instantly
                   </p>
-                  <div className="bg-slate-900/50 rounded-lg p-3">
-                    <code className="text-xs break-all text-slate-300">{quizUrl}</code>
+                  <div className="aiq-subcard rounded-lg p-3">
+                    <code className="text-xs break-all text-[var(--theme-text)]">{quizUrl}</code>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-4  " >
-                  <div key={question.id} className="border-2 border-slate-700 rounded-lg p-4  h-[270px]">
-                    <h4 className="font-semibold mb-2 text-white">
+                  <div key={question.id} className="rounded-lg border-2 border-[var(--theme-border)] p-4 h-[270px]">
+                    <h4 className="aiq-heading mb-2 font-semibold">
                       {currentQuestionIndex + 1}. {question.question}
                     </h4>
                     <div className="space-y-1">
@@ -163,7 +163,7 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
                           key={optIndex}
                           className={`text-sm p-2 rounded ${optIndex === question.correctAnswer
                               ? "bg-cyan-500/20 text-cyan-400 border-2 border-cyan-500/50"
-                              : "bg-slate-900/50 text-slate-300"
+                            : "aiq-subcard aiq-muted"
                             }`}
                         >
 
@@ -177,14 +177,14 @@ const QuizDisplay = ({ quiz, onBack }: QuizDisplayProps) => {
                     <button
                       onClick={handlePrevious}
                       disabled={currentQuestionIndex === 0}
-                      className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                      className="aiq-button-primary rounded px-4 py-2 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Previous
                     </button>
                     <button
                       onClick={handleNext}
                       disabled={currentQuestionIndex === quiz.questions.length - 1}
-                      className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                      className="aiq-button-primary rounded px-4 py-2 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Next
                     </button>

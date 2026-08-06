@@ -82,12 +82,12 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
   const percentageScore = Math.round((results.score / results.totalQuestions) * 100);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+    <div className="flex min-h-screen w-full items-center justify-center text-[var(--theme-text)]">
       <div className="w-full max-w-4xl px-4 flex flex-col items-center justify-start py-8">
         <Button 
           variant="ghost" 
           onClick={onBack}
-          className="mb-8 self-start text-slate-300 hover:text-white"
+          className="aiq-muted mb-8 self-start hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Take Quiz Again
@@ -96,13 +96,13 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
         {/* Answer Review Section */}
         {showAnswers && (
           <div className="w-full mb-8">
-            <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+            <Card className="aiq-card">
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+                <CardTitle className="aiq-heading flex items-center gap-2 text-2xl font-bold">
                   <Eye className="w-6 h-6 text-cyan-400" />
                   Answer Review
                 </CardTitle>
-                <p className="text-slate-400">Your answers vs correct answers</p>
+                <p className="aiq-muted">Your answers vs correct answers</p>
               </CardHeader>
               <CardContent className="max-h-[500px] overflow-y-auto">
                 <div className="space-y-4">
@@ -126,7 +126,7 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                             <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-1" />
                           )}
                           <div className="flex-1">
-                            <h4 className="font-semibold text-white mb-2">
+                            <h4 className="aiq-heading mb-2 font-semibold">
                               Q{index + 1}. {question.question}
                             </h4>
                           </div>
@@ -145,7 +145,7 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                                     ? 'bg-emerald-500/20 border-2 border-emerald-500/50 text-emerald-300'
                                     : isUserAnswer
                                     ? 'bg-red-500/20 border-2 border-red-500/50 text-red-300'
-                                    : 'bg-slate-900/50 text-slate-400'
+                                    : 'aiq-subcard aiq-muted'
                                 }`}
                               >
                                 <div className="flex items-center gap-2">
@@ -174,17 +174,17 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
         <div className="grid lg:grid-cols-3 gap-8 w-full">
           {/* Personal Results */}
           <div className="lg:col-span-1 flex flex-col justify-start">
-            <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+            <Card className="aiq-card">
               <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-bold text-white">Your Results</CardTitle>
-                <p className="text-slate-400">{quiz.topic}</p>
+                <CardTitle className="aiq-heading text-2xl font-bold">Your Results</CardTitle>
+                <p className="aiq-muted">{quiz.topic}</p>
               </CardHeader>
               <CardContent className="text-center space-y-6">
                 <div className="space-y-2">
-                  <div className="text-4xl font-bold text-cyan-400">
+                  <div className="text-4xl font-bold text-[var(--theme-accent)]">
                     {results.score}/{results.totalQuestions}
                   </div>
-                  <div className="text-lg text-slate-300">
+                  <div className="aiq-muted text-lg">
                     {percentageScore}% Correct
                   </div>
                 </div>
@@ -200,16 +200,16 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                   <Button 
                     onClick={() => setShowAnswers(!showAnswers)} 
                     variant="outline" 
-                    className="w-full border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
+                    className="aiq-button-soft w-full"
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     {showAnswers ? "Hide" : "View"} Answers
                   </Button>
-                  <Button onClick={shareResults} variant="outline" className="w-full border-slate-600 text-slate-300 hover:bg-slate-700">
+                  <Button onClick={shareResults} variant="outline" className="aiq-button-soft w-full">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share Results
                   </Button>
-                  <Button onClick={onNewQuiz} className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900">
+                  <Button onClick={onNewQuiz} className="aiq-button-primary w-full">
                     Create New Quiz
                   </Button>
                 </div>
@@ -219,13 +219,13 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
 
           {/* Leaderboard */}
           <div className="lg:col-span-2 flex flex-col justify-start">
-            <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700 w-full">
+            <Card className="aiq-card w-full">
               <CardHeader>
-                <CardTitle className="text-2xl font-bold flex items-center gap-2 text-white">
+                <CardTitle className="aiq-heading flex items-center gap-2 text-2xl font-bold">
                   <Trophy className="w-6 h-6 text-cyan-400" />
                   Leaderboard
                 </CardTitle>
-                <p className="text-slate-400">
+                <p className="aiq-muted">
                   Live rankings for "{quiz.topic}" quiz
                 </p>
               </CardHeader>
@@ -240,33 +240,33 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                         className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${
                           isCurrentUser 
                             ? 'bg-cyan-500/10 border-cyan-500/50 shadow-lg' 
-                            : 'bg-slate-900/50 border-slate-700 hover:bg-slate-800/50'
+                            : 'aiq-subcard border-[var(--theme-border)] hover:bg-[var(--theme-card-hover)]'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           {getRankIcon(rank)}
-                          <div className="text-lg font-bold text-slate-300">
+                          <div className="aiq-heading text-lg font-bold">
                             #{rank}
                           </div>
                         </div>
 
                         <div className="flex-1">
-                          <div className="font-semibold flex items-center gap-2 text-white">
+                          <div className="aiq-heading flex items-center gap-2 font-semibold">
                             {result.playerName}
                             {isCurrentUser && (
                               <Badge className="text-xs bg-cyan-500 text-slate-900">You</Badge>
                             )}
                           </div>
-                          <div className="text-sm text-slate-400">
+                          <div className="aiq-muted text-sm">
                             Completed {new Date(result.completedAt).toLocaleTimeString()}
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <div className="text-lg font-bold text-white">
+                          <div className="aiq-heading text-lg font-bold">
                             {result.score}/{result.totalQuestions}
                           </div>
-                          <div className="text-sm text-slate-400">
+                          <div className="aiq-muted text-sm">
                             {Math.round((result.score / result.totalQuestions) * 100)}%
                           </div>
                         </div>
@@ -276,10 +276,10 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                 </div>
 
                 {/* Stats Summary */}
-                <div className="mt-8 grid grid-cols-3 gap-4 pt-6 border-t border-slate-700">
+                <div className="mt-8 grid grid-cols-3 gap-4 border-t border-[var(--theme-border)] pt-6">
                   <div className="text-center">
-                    <div className="text-lg font-bold text-cyan-400">{allResults.length}</div>
-                    <div className="text-sm text-slate-400">Participants</div>
+                    <div className="text-lg font-bold text-[var(--theme-accent)]">{allResults.length}</div>
+                    <div className="aiq-muted text-sm">Participants</div>
                   </div>
                   <div className="text-center">
                     <div className="text-lg font-bold text-blue-400">
@@ -287,13 +287,13 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
                         ? (Math.round(allResults.reduce((sum, r) => sum + r.score, 0) / allResults.length * 10) / 10).toFixed(1)
                         : '0.0'}
                     </div>
-                    <div className="text-sm text-slate-400">Avg Score</div>
+                    <div className="aiq-muted text-sm">Avg Score</div>
                   </div>
                   <div className="text-center">
                     <div className="text-lg font-bold text-yellow-400">
                       {allResults.length > 0 ? Math.max(...allResults.map(r => r.score)) : 0}
                     </div>
-                    <div className="text-sm text-slate-400">High Score</div>
+                    <div className="aiq-muted text-sm">High Score</div>
                   </div>
                 </div>
               </CardContent>

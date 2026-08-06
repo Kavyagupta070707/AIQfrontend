@@ -163,20 +163,20 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
   // Auth modals - show directly if not logged in
   if (showAuth === "login") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-4 text-[var(--theme-text)]">
         <div className="w-full max-w-md">
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold mb-2 text-white">
+              <CardTitle className="aiq-heading mb-2 text-2xl font-bold">
                 Sign In to Continue
               </CardTitle>
-              <p className="text-slate-400 text-sm">
+              <p className="aiq-muted text-sm">
                 Login to take the quiz and save your results
               </p>
               <Button 
                 variant="ghost" 
                 onClick={onBack}
-                className="mt-4 text-slate-300 hover:text-white"
+                className="aiq-muted mt-4 hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Cancel
@@ -184,6 +184,7 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
             </CardHeader>
             <CardContent>
               <LoginPage 
+                embedded
                 onSignupRedirect={() => setShowAuth("signup")}
                 onLoginSuccess={(token, userObj) => {
                   // Save to localStorage
@@ -206,20 +207,20 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
 
   if (showAuth === "signup") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-4 text-[var(--theme-text)]">
         <div className="w-full max-w-md">
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold mb-2 text-white">
+              <CardTitle className="aiq-heading mb-2 text-2xl font-bold">
                 Create Account
               </CardTitle>
-              <p className="text-slate-400 text-sm">
+              <p className="aiq-muted text-sm">
                 Sign up to take the quiz and track your progress
               </p>
               <Button 
                 variant="ghost" 
                 onClick={() => setShowAuth("login")}
-                className="mt-4 text-slate-300 hover:text-white"
+                className="aiq-muted mt-4 hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Login
@@ -227,6 +228,7 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
             </CardHeader>
             <CardContent>
               <SignupPage 
+                embedded
                 onLoginRedirect={() => setShowAuth("login")}
               />
             </CardContent>
@@ -238,28 +240,28 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
 
   if (!hasStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center text-[var(--theme-text)]">
         <div className="w-full max-w-3xl px-4 flex flex-col items-center justify-center">
           <Button 
             variant="ghost" 
             onClick={onBack}
-            className="mb-8 self-start text-slate-300 hover:text-white"
+            className="aiq-muted mb-8 self-start hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700 w-full">
+          <Card className="aiq-card w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-white">
+              <CardTitle className="aiq-heading text-3xl font-bold">
                 Quiz: {quiz.topic}
               </CardTitle>
-              <p className="text-slate-400">
+              <p className="aiq-muted">
                 {quiz.questions.length} questions • Multiple choice
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="playerName" className="text-base font-medium text-slate-300">
+                <Label htmlFor="playerName" className="aiq-heading text-base font-medium">
                   Your Name {isLoggedIn && <span className="text-emerald-400">(Logged in ✓)</span>}
                 </Label>
                 <Input
@@ -267,23 +269,23 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
                   placeholder="Enter your name..."
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="text-lg py-3 bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-500"
+                  className="aiq-input py-3 text-lg"
                   disabled={isLoggedIn}
                 />
               </div>
               <Button 
                 onClick={startQuiz}
                 size="lg"
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold"
+                className="aiq-button-primary w-full font-semibold"
               >
                 Start Quiz
               </Button>
-              <div className="bg-slate-900/50 rounded-lg p-4 space-y-2">
-                <h4 className="font-semibold text-sm flex items-center gap-2 text-white">
+              <div className="aiq-subcard space-y-2 rounded-lg p-4">
+                <h4 className="aiq-heading flex items-center gap-2 text-sm font-semibold">
                   <Users className="w-4 h-4" />
                   Quiz Info
                 </h4>
-                <ul className="text-sm text-slate-400 space-y-1">
+                <ul className="aiq-muted space-y-1 text-sm">
                   <li>• {quiz.questions.length} multiple choice questions</li>
                   <li>• Each question has 4 possible answers</li>
                   <li>• Take your time, no time limit</li>
@@ -301,11 +303,11 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
   const question = quiz.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+    <div className="flex min-h-screen w-full items-center justify-center text-[var(--theme-text)]">
       <div className="w-full max-w-5xl px-4 flex flex-row items-center justify-center py-8 gap-8">
         {/* Circular Progress Section */}
         <div className="hidden md:flex flex-col items-center justify-center w-1/4 max-w-[140px] h-full">
-          <div className="mb-4 text-base font-semibold text-cyan-400 text-center truncate max-w-[120px]">
+          <div className="mb-4 max-w-[120px] truncate text-center text-base font-semibold text-[var(--theme-accent)]">
             {playerName}
           </div>
           <div style={{ width: 100, height: 100 }}>
@@ -321,15 +323,15 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
               })}
             />
           </div>
-          <div className="mt-4 text-sm font-medium text-slate-400 text-center">
+          <div className="aiq-muted mt-4 text-center text-sm font-medium">
             Progress
           </div>
         </div>
         {/* Quiz Card Section */}
         <div className="flex-1 flex flex-col items-center justify-center">
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700 w-full">
+          <Card className="aiq-card w-full">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-white">
+              <CardTitle className="aiq-heading text-2xl font-bold">
                 {question.question}
               </CardTitle>
             </CardHeader>
@@ -343,13 +345,13 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
                     className={`w-full justify-start p-6 h-auto text-left ${
                       selectedAnswer === index 
                         ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-900 border-cyan-400 font-semibold' 
-                        : 'border-slate-600 bg-slate-900/50 text-white hover:bg-slate-700 hover:border-slate-500'
+                        : 'aiq-subcard hover:bg-[var(--theme-card-hover)]'
                     }`}
                     onClick={() => selectAnswer(index)}
                   >
                     <div className="flex items-start gap-3">
                       <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                        selectedAnswer === index ? 'bg-slate-900 text-cyan-400' : 'bg-slate-700 text-slate-300'
+                        selectedAnswer === index ? 'bg-[var(--theme-card)] text-[var(--theme-accent)]' : 'bg-[color-mix(in_srgb,var(--theme-text)_10%,transparent)] text-[var(--theme-muted)]'
                       }`}>
                         {String.fromCharCode(65 + index)}
                       </div>
@@ -366,7 +368,7 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
                   disabled={currentQuestion === 0}
                   variant="outline"
                   size="lg"
-                  className="w-1/2 border-slate-600 text-slate-300 hover:bg-slate-700"
+                  className="aiq-button-soft w-1/2"
                 >
                   Previous
                 </Button>
@@ -374,7 +376,7 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
                   onClick={nextQuestion}
                   disabled={selectedAnswer === null}
                   size="lg"
-                  className="w-1/2 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold"
+                  className="aiq-button-primary w-1/2 font-semibold"
                 >
                   {currentQuestion < quiz.questions.length - 1 ? "Next" : "Finish Quiz"}
                 </Button>

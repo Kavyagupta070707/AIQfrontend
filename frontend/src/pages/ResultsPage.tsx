@@ -57,7 +57,7 @@ const ResultsPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
       </div>
     );
@@ -65,8 +65,8 @@ const ResultsPage = () => {
 
   if (!quiz || !result) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        <p className="text-white">Result not found</p>
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="aiq-heading">Result not found</p>
       </div>
     );
   }
@@ -74,12 +74,12 @@ const ResultsPage = () => {
   const percentageScore = Math.round((result.score / result.totalQuestions) * 100);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-8">
+    <div className="min-h-screen w-full py-8">
       <div className="w-full max-w-5xl mx-auto px-4">
         <Button 
           variant="ghost" 
           onClick={() => navigate('/dashboard')}
-          className="mb-6 text-slate-300 hover:text-white"
+          className="aiq-muted mb-6 hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
@@ -87,30 +87,30 @@ const ResultsPage = () => {
 
         {/* Results Summary */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardContent className="pt-6 text-center">
-              <div className="text-4xl font-bold text-cyan-400 mb-2">
+              <div className="mb-2 text-4xl font-bold text-[var(--theme-accent)]">
                 {result.score}/{result.totalQuestions}
               </div>
-              <div className="text-slate-400">Score</div>
+              <div className="aiq-muted">Score</div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardContent className="pt-6 text-center">
-              <div className="text-4xl font-bold text-blue-400 mb-2">
+              <div className="mb-2 text-4xl font-bold text-[var(--theme-accent)]">
                 {percentageScore}%
               </div>
-              <div className="text-slate-400">Accuracy</div>
+              <div className="aiq-muted">Accuracy</div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardContent className="pt-6 text-center">
-              <div className="text-4xl font-bold text-indigo-400 mb-2">
+              <div className="mb-2 text-4xl font-bold text-[var(--theme-accent)]">
                 {quiz.topic}
               </div>
-              <div className="text-slate-400">Topic</div>
+              <div className="aiq-muted">Topic</div>
             </CardContent>
           </Card>
         </div>
@@ -119,7 +119,7 @@ const ResultsPage = () => {
         <div className="flex gap-4 mb-8">
           <Button 
             onClick={() => setShowAnswers(!showAnswers)} 
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-900"
+            className="aiq-button-primary"
           >
             <Eye className="w-4 h-4 mr-2" />
             {showAnswers ? "Hide" : "Show"} Detailed Answers
@@ -127,7 +127,7 @@ const ResultsPage = () => {
           <Button 
             onClick={shareResults} 
             variant="outline" 
-            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+            className="aiq-button-soft"
           >
             <Share2 className="w-4 h-4 mr-2" />
             Share Results
@@ -144,13 +144,13 @@ const ResultsPage = () => {
 
         {/* Answer Review Section */}
         {showAnswers && (
-          <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
+          <Card className="aiq-card">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+              <CardTitle className="aiq-heading flex items-center gap-2 text-2xl font-bold">
                 <Eye className="w-6 h-6 text-cyan-400" />
                 Detailed Answer Review
               </CardTitle>
-              <p className="text-slate-400">Review all questions with correct answers</p>
+              <p className="aiq-muted">Review all questions with correct answers</p>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -174,7 +174,7 @@ const ResultsPage = () => {
                           <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-1" />
                         )}
                         <div className="flex-1">
-                          <h4 className="font-semibold text-white mb-2">
+                          <h4 className="aiq-heading mb-2 font-semibold">
                             Question {index + 1}. {question.question}
                           </h4>
                         </div>
@@ -193,7 +193,7 @@ const ResultsPage = () => {
                                   ? 'bg-emerald-500/20 border-2 border-emerald-500/50 text-emerald-300'
                                   : isUserAnswer
                                   ? 'bg-red-500/20 border-2 border-red-500/50 text-red-300'
-                                  : 'bg-slate-900/50 text-slate-400'
+                                  : 'aiq-subcard border border-[var(--theme-border)] aiq-muted'
                               }`}
                             >
                               <div className="flex items-center gap-2">

@@ -45,7 +45,7 @@ const LeaderboardPage = () => {
       case 3:
         return <Award className="w-6 h-6 text-amber-600" />;
       default:
-        return <div className="w-6 h-6 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold">{rank}</div>;
+        return <div className="aiq-subcard flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">{rank}</div>;
     }
   };
 
@@ -75,7 +75,7 @@ const LeaderboardPage = () => {
   if (!quiz) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Quiz not found</p>
+        <p className="aiq-heading">Quiz not found</p>
       </div>
     );
   }
@@ -85,12 +85,12 @@ const LeaderboardPage = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4 max-w-6xl">
         <Button 
           variant="ghost" 
           onClick={() => navigate('/dashboard')}
-          className="mb-6 text-slate-300 hover:text-white"
+          className="aiq-muted mb-6 hover:bg-[var(--theme-subcard)] hover:text-[var(--theme-text)]"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
@@ -104,11 +104,11 @@ const LeaderboardPage = () => {
                 <Trophy className="w-10 h-10 text-yellow-400" />
                 Leaderboard
               </h1>
-              <p className="text-slate-400 mt-2 text-lg">
-                Rankings for <span className="font-semibold text-cyan-400">{quiz.topic}</span> quiz
+              <p className="aiq-muted mt-2 text-lg">
+                Rankings for <span className="font-semibold text-[var(--theme-accent)]">{quiz.topic}</span> quiz
               </p>
             </div>
-            <Button onClick={shareLeaderboard} variant="outline" size="lg" className="border-slate-600 text-slate-300 hover:bg-slate-700">
+            <Button onClick={shareLeaderboard} variant="outline" size="lg" className="aiq-button-soft">
               <Share2 className="w-4 h-4 mr-2" />
               Share
             </Button>
@@ -157,16 +157,16 @@ const LeaderboardPage = () => {
         </div>
 
         {/* Leaderboard */}
-        <Card className="shadow-xl bg-slate-800/50 backdrop-blur-md border-slate-700">
-          <CardHeader className="bg-gradient-to-r from-slate-800 to-blue-900/50">
-            <CardTitle className="text-2xl font-bold text-white">Rankings</CardTitle>
+        <Card className="aiq-card">
+          <CardHeader className="aiq-subcard border-b border-[var(--theme-border)]">
+            <CardTitle className="aiq-heading text-2xl font-bold">Rankings</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
             {allResults.length === 0 ? (
               <div className="text-center py-12">
                 <Trophy className="w-16 h-16 text-slate-500 mx-auto mb-4 opacity-50" />
-                <p className="text-lg text-slate-400">No participants yet</p>
-                <p className="text-sm text-slate-500 mt-2">Be the first to take this quiz!</p>
+                <p className="aiq-muted text-lg">No participants yet</p>
+                <p className="aiq-muted mt-2 text-sm">Be the first to take this quiz!</p>
               </div>
             ) : (
               <div className="space-y-3 max-h-[600px] overflow-y-auto">
@@ -185,7 +185,7 @@ const LeaderboardPage = () => {
                     if (rank === 1) return 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-500/50';
                     if (rank === 2) return 'bg-gradient-to-r from-slate-500/20 to-slate-600/20 border-slate-500/50';
                     if (rank === 3) return 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 border-amber-500/50';
-                    return 'bg-slate-900/50 border-slate-700 hover:bg-slate-800/50';
+                    return 'aiq-subcard border-[var(--theme-border)] hover:bg-[var(--theme-card-hover)]';
                   };
 
                   return (
@@ -195,13 +195,13 @@ const LeaderboardPage = () => {
                     >
                       <div className="flex items-center gap-3 min-w-[60px]">
                         {getRankIcon(rank)}
-                        <div className="text-xl font-bold text-slate-300">
+                        <div className="aiq-heading text-xl font-bold">
                           #{rank}
                         </div>
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-lg truncate flex items-center gap-2 text-white">
+                        <div className="aiq-heading flex items-center gap-2 truncate text-lg font-semibold">
                           {result.playerName}
                           {rank <= 3 && (
                             <Badge 
@@ -211,13 +211,13 @@ const LeaderboardPage = () => {
                             </Badge>
                           )}
                         </div>
-                        <div className="text-sm text-slate-400">
+                        <div className="aiq-muted text-sm">
                           Completed {new Date(result.completedAt).toLocaleDateString()} at {new Date(result.completedAt).toLocaleTimeString()}
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-white">
+                        <div className="aiq-heading text-2xl font-bold">
                           {result.score}/{result.totalQuestions}
                         </div>
                         <div className={`text-sm font-semibold px-2 py-1 rounded ${getScoreColor(percentage)}`}>

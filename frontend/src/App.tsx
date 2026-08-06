@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import type { ReactNode } from "react";
 import axios from "axios";
 // Wrapper to fetch quiz by id from backend for /quiz/:id/take
 function QuizTakerWrapper({ onComplete }: { onComplete: (results: any) => void }) {
@@ -29,14 +30,22 @@ import HeroSection from "@/components/HeroSection";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
+import RoadmapsPage from "./pages/RoadmapsPage";
+import RoadmapCreatorPage from "./pages/RoadmapCreatorPage";
+import RoadmapDetailPage from "./pages/RoadmapDetailPage";
+import RoadmapStepPage from "./pages/RoadmapStepPage";
+import NotesPage from "./pages/NotesPage";
+import ShortNotesPage from "./pages/ShortNotesPage";
+import StickyNotesPage from "./pages/StickyNotesPage";
 import QuizCreator from "@/components/QuizCreator";
 import QuizDisplay from "@/components/QuizDisplay";
 import QuizTaker from "@/components/QuizTaker";
 import Leaderboard from "@/components/Leaderboard";
 import NotFound from "./pages/NotFound";
-import Navbar from "@/components/Navbar";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ResultsPage from "./pages/ResultsPage";
+import StudyShell from "@/components/study/StudyShell";
+import { ThemeProvider } from "@/components/study/ThemeProvider";
 
 const queryClient = new QueryClient();
 
@@ -82,28 +91,40 @@ const App = () => {
     window.location.href = path;
   };
 
+  const withShell = (children: ReactNode) => (
+    user ? <StudyShell user={user} onLogout={handleLogout} onNavigate={handleNavigate}>{children}</StudyShell> : <Navigate to="/login" />
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Navbar user={user} onLogout={handleLogout} onNavigate={handleNavigate} />
-          <Routes>
-            <Route path="/" element={<HeroSection onLogin={() => window.location.href='/login'} onSignup={() => window.location.href='/signup'} onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/login" element={<LoginPage onSignupRedirect={() => window.location.href='/signup'} onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/signup" element={<SignupPage onLoginRedirect={() => window.location.href='/login'} />} />
-            <Route path="/dashboard" element={user ? <Dashboard user={user} authToken={authToken} onCreateQuiz={() => window.location.href='/create'} onShowQuiz={setCurrentQuiz} onNavigate={handleNavigate} /> : <Navigate to="/login" />} />
-            <Route path="/create" element={user ? <QuizCreator onBack={() => window.location.href='/dashboard'} onQuizGenerated={setCurrentQuiz} /> : <Navigate to="/login" />} />
-            <Route path="/quiz" element={currentQuiz ? <QuizDisplay quiz={currentQuiz} onBack={() => window.location.href='/dashboard'} /> : <Navigate to="/dashboard" />} />
-            <Route path="/take" element={currentQuiz ? <QuizTaker quiz={currentQuiz} onBack={() => window.location.href='/quiz'} onComplete={setQuizResults} /> : <Navigate to="/dashboard" />} />
-            <Route path="/quiz/:id/take" element={<QuizTakerWrapper onComplete={setQuizResults} />} />
-            <Route path="/quiz/:id/leaderboard" element={<LeaderboardPage />} />
-            <Route path="/results/:id" element={user ? <ResultsPage /> : <Navigate to="/login" />} />
-            <Route path="/leaderboard" element={currentQuiz && quizResults ? <Leaderboard quiz={currentQuiz} results={quizResults} onBack={() => window.location.href='/take'} onNewQuiz={() => window.location.href='/create'} /> : <Navigate to="/dashboard" />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HeroSection onLogin={() => window.location.href='/login'} onSignup={() => window.location.href='/signup'} onLoginSuccess={handleLoginSuccess} />} />
+              <Route path="/login" element={<LoginPage onSignupRedirect={() => window.location.href='/signup'} onLoginSuccess={handleLoginSuccess} />} />
+              <Route path="/signup" element={<SignupPage onLoginRedirect={() => window.location.href='/login'} />} />
+              <Route path="/dashboard" element={withShell(<Dashboard user={user} onCreateQuiz={() => window.location.href='/create'} onNavigate={handleNavigate} />)} />
+              <Route path="/roadmaps" element={withShell(<RoadmapsPage user={user} />)} />
+              <Route path="/roadmaps/create" element={withShell(<RoadmapCreatorPage user={user} />)} />
+              <Route path="/roadmaps/:id" element={withShell(<RoadmapDetailPage />)} />
+              <Route path="/roadmaps/:id/steps/:stepIndex" element={withShell(<RoadmapStepPage onQuizGenerated={setCurrentQuiz} />)} />
+              <Route path="/notes" element={withShell(<NotesPage user={user} />)} />
+              <Route path="/short-notes" element={withShell(<ShortNotesPage user={user} />)} />
+              <Route path="/sticky-notes" element={withShell(<StickyNotesPage user={user} />)} />
+              <Route path="/create" element={withShell(<QuizCreator onBack={() => window.location.href='/dashboard'} onQuizGenerated={setCurrentQuiz} />)} />
+              <Route path="/quiz" element={withShell(currentQuiz ? <QuizDisplay quiz={currentQuiz} onBack={() => window.location.href='/dashboard'} /> : <Navigate to="/dashboard" />)} />
+              <Route path="/take" element={withShell(currentQuiz ? <QuizTaker quiz={currentQuiz} onBack={() => window.location.href='/quiz'} onComplete={setQuizResults} /> : <Navigate to="/dashboard" />)} />
+              <Route path="/quiz/:id/take" element={withShell(<QuizTakerWrapper onComplete={setQuizResults} />)} />
+              <Route path="/quiz/:id/leaderboard" element={withShell(<LeaderboardPage />)} />
+              <Route path="/results/:id" element={withShell(<ResultsPage />)} />
+              <Route path="/leaderboard" element={withShell(currentQuiz && quizResults ? <Leaderboard quiz={currentQuiz} results={quizResults} onBack={() => window.location.href='/take'} onNewQuiz={() => window.location.href='/create'} /> : <Navigate to="/dashboard" />)} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
