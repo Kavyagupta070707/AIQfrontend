@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, ArrowLeft, Share2, CheckCircle, XCircle, Eye } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
+import { cachedGet } from "@/lib/api";
 
 interface LeaderboardProps {
   quiz: any;
@@ -20,8 +20,7 @@ const Leaderboard = ({ quiz, results, onBack, onNewQuiz }: LeaderboardProps) => 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-        const res = await axios.get(`${BACKEND_URL}/api/quiz/${quiz._id}/leaderboard`);
+        const res = await cachedGet(`/api/quiz/${quiz._id}/leaderboard`);
         // Add the current user's result if not present
         let leaderboard = res.data || [];
         const exists = leaderboard.some((r: any) => r.playerName === results.playerName && r.score === results.score);

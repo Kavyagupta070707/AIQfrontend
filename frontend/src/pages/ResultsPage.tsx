@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, ArrowLeft, CheckCircle, XCircle, Eye, Share2 } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
+import { cachedGet } from "@/lib/api";
 
 const ResultsPage = () => {
   const { id } = useParams(); // result ID
@@ -19,14 +19,11 @@ const ResultsPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-        // Fetch the result by ID
-        const resultRes = await axios.get(`${BACKEND_URL}/api/results/${id}`);
+        const resultRes = await cachedGet(`/api/results/${id}`);
         const resultData = resultRes.data;
         setResult(resultData);
         
-        // Fetch the quiz
-        const quizRes = await axios.get(`${BACKEND_URL}/api/quiz/${resultData.quizId}`);
+        const quizRes = await cachedGet(`/api/quiz/${resultData.quizId}`);
         setQuiz(quizRes.data);
       } catch (err) {
         console.error("Failed to load result:", err);

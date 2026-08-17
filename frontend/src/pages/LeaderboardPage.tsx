@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, ArrowLeft, Share2, Users, Target } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
+import { cachedGet } from "@/lib/api";
 
 const LeaderboardPage = () => {
   const { id } = useParams();
@@ -18,10 +18,9 @@ const LeaderboardPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
         const [quizRes, leaderboardRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/quiz/${id}`),
-          axios.get(`${BACKEND_URL}/api/quiz/${id}/leaderboard`)
+          cachedGet(`/api/quiz/${id}`),
+          cachedGet(`/api/quiz/${id}/leaderboard`)
         ]);
         setQuiz(quizRes.data);
         setAllResults(leaderboardRes.data || []);

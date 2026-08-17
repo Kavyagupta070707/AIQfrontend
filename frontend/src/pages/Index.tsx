@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate, useParams } from "react-router-dom";
-import axios from "axios";
+import { cachedGet } from "@/lib/api";
 // Wrapper to fetch quiz by id from backend for /quiz/:id/take
 function QuizTakerWrapper({ onComplete }: { onComplete: (results: any) => void }) {
   const { id } = useParams();
@@ -9,8 +9,7 @@ function QuizTakerWrapper({ onComplete }: { onComplete: (results: any) => void }
   const navigate = useNavigate();
   React.useEffect(() => {
     if (!id) return;
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-    axios.get(`${BACKEND_URL}/api/quiz/${id}`)
+    cachedGet(`/api/quiz/${id}`)
       .then(res => setQuiz(res.data))
       .catch(() => navigate("/dashboard"));
   }, [id, navigate]);

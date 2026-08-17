@@ -1,4 +1,3 @@
-import axios from "axios";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useState, useEffect } from "react";
@@ -11,6 +10,7 @@ import { ArrowLeft, Users } from "lucide-react";
 import { toast } from "sonner";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
+import { api, clearApiCache } from "@/lib/api";
 
 interface QuizTakerProps {
   quiz: any;
@@ -136,8 +136,8 @@ const QuizTaker =  ({ quiz, onBack, onComplete }: QuizTakerProps) => {
         
         console.log("Submitting quiz data:", submitData);
 
-        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-        await axios.post(`${BACKEND_URL}/api/quiz/${quiz._id}/submit`, submitData);
+        await api.post(`/api/quiz/${quiz._id}/submit`, submitData);
+        clearApiCache();
         toast.success(`Quiz completed! You scored ${score}/${quiz.questions.length}`);
         onComplete(results);
       } catch (err: any) {
